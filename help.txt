@@ -1,0 +1,21 @@
+validate token
+
+api.go
+
+api := r.Group("/api")
+
+    api.Use(middleware.ValidateToken())
+
+    product := api.Group("/product")
+    product.Use(middleware.Authorization([]int{1}))
+    product.GET("/", handler.GetAll)
+    product.POST("/", middleware.Authorization([]int{3}), handler.AddProduct)
+
+claimsModel.go
+
+func (claims JwtClaims) VerifyAudience(origin string) bool {
+    return strings.Compare(claims.Audience, origin) == 0
+}
+
+
+token.go
